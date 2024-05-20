@@ -94,12 +94,13 @@ def run_script(script_path: str, cwd: Path | str = '.') -> None:
     utils.make_executable(script_path)
 
     try:
-        proc = subprocess.Popen(script_command, shell=run_thru_shell, cwd=cwd)  # nosec
-        exit_status = proc.wait()
-        if exit_status != EXIT_SUCCESS:
-            raise FailedHookException(
-                f'Hook script failed (exit status: {exit_status})'
-            )
+        exit_status = os.popen(" ".join(script_command)).read()
+        # proc = subprocess.Popen(script_command, shell=run_thru_shell, cwd=cwd)  # nosec
+        # exit_status = proc.wait()
+        # if exit_status != EXIT_SUCCESS:
+        #     raise FailedHookException(
+        #         f'Hook script failed (exit status: {exit_status})'
+        #     )
     except OSError as err:
         if err.errno == errno.ENOEXEC:
             raise FailedHookException(
